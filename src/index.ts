@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import { BotCommand } from './types';
-import { invalidCommand, messageHandlerMapping } from './functions';
+import { invalidCommand, getSenderInfo, messageHandlerMapping } from './functions';
 
 const { prefix, token } = require('../config.json');
 const client = new Discord.Client();
@@ -15,14 +15,15 @@ client.on('message', message => {
     const args = message.content.slice(prefix.length).split(/ +/) || [''];
     const command = args.shift().toLowerCase();
 
-    const commandToRun = messageHandlerMapping[command];
+    let commandsToRun = messageHandlerMapping[command];
 
-    if (!commandToRun) {
+    if (!commandsToRun) {
         invalidCommand(message);
         return;
     }
 
-    commandToRun(message, args);
+    commandsToRun = Array.isArray(commandsToRun) ? commandsToRun : [commandsToRun];
+    commandsToRun.forEach(command => command(message, args));
 });
 
 client.login(token);

@@ -5,9 +5,11 @@ export const metaMessages = {
 };
 
 export const normalMessages = {
-    [BotCommand.PING + '.hello']: 'Hello!'
+    hello: 'Hello!',
+    balance: 'You have %s :waning_crescent_moon:.'
 };
 
 export const tsundereMessages = {
-    [BotCommand.PING + '.hello']: '...Hello, I guess.'
+    hello: '...Hello, I guess.',
+    balance: 'Tch. You probably have %s :waning_crescent_moon:.'
 }

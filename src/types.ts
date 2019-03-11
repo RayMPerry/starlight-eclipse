@@ -1,7 +1,9 @@
 export enum BotCommand {
-    PING = 'hello'
+    PING = 'hello',
+    THUMBS_UP = 'thumbsup',
+    BALANCE = 'balance'
 }
 
 export interface HandlerMapping {
-    [key: string]: Function
+    [key: string]: Function | Function[]
 }
