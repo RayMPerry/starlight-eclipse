@@ -27,6 +27,11 @@ export const getSenderInfo = (message: Message) => {
     console.log('Member ID: %s', message.member.id);
 };
 
+export const getCurrentTime = (message: Message) => {
+    const currentDate = new Date();
+    message.reply(format('It is %s where I am.', currentDate.toLocaleString('en-US')));
+};
+
 // Currency functions
 
 export const getBalance = (message: Message) => {
@@ -57,6 +62,7 @@ export const thumbsUp = (message: Message) => {
 
 export const messageHandlerMapping: HandlerMapping = {
     [BotCommand.PING]: pingBack,
+    [BotCommand.GET_TIME]: getCurrentTime,
     [BotCommand.THUMBS_UP]: thumbsUp,
     [BotCommand.BALANCE]: getBalance
 };
