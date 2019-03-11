@@ -16,8 +16,8 @@ export const invalidCommand = (message: any) => {
 
 export const pingBack = (message: Message) => {
     const response = isTsundere()
-        ? tsundereMessages['hello']
-        : normalMessages['hello']
+        ? tsundereMessages.hello
+        : normalMessages.hello
 
     message.reply(response);
 };
@@ -31,8 +31,8 @@ export const getSenderInfo = (message: Message) => {
 
 export const getBalance = (message: Message) => {
     const response = isTsundere()
-        ? tsundereMessages['balance']
-        : normalMessages['balance'];
+        ? tsundereMessages.balance
+        : normalMessages.balance;
 
     const balance = balances[message.member.id];
 
@@ -52,6 +52,8 @@ export const thumbsUp = (message: Message) => {
     const attachment = new Attachment(__dirname + '/assets/thumbs_up.gif');
     message.channel.send(attachment);
 };
+
+// Exported mapping
 
 export const messageHandlerMapping: HandlerMapping = {
     [BotCommand.PING]: pingBack,
