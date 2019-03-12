@@ -62,4 +62,6 @@ typings/
 
 # Other
 dist/**/*.js
-dist/data/**/balances.json
+dist/data/balances.json
+dist/data/bank.json
+dist/data/dailies.json
