@@ -18,10 +18,7 @@ client.on('message', message => {
 
     let commandsToRun = messageHandlerMapping[command];
 
-    if (!commandsToRun) {
-        invalidCommand(message);
-        return;
-    }
+    if (!commandsToRun) return;
 
     commandsToRun = Array.isArray(commandsToRun) ? commandsToRun : [commandsToRun];
     commandsToRun.forEach(command => command(message, args));
