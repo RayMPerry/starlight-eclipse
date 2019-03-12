@@ -56,8 +56,11 @@ export const checkEconomy = (): number => {
 };
 
 export const getCurrentEconomy = (message: Message) => {
-    if (remainingMoons < 0) message.channel.send(metaMessages.souredEconomy);
-    message.channel.send(format('There are %s unclaimed :waning_crescent_moon:s left.', remainingMoons));
+    if (remainingMoons < 0) {
+        message.channel.send(metaMessages.souredEconomy);
+    } else {
+        message.channel.send(format('There are %s unclaimed :waning_crescent_moon:s left.', remainingMoons));
+    }
     return;
 };
 
