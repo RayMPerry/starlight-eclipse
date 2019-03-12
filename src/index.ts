@@ -1,11 +1,12 @@
 import Discord from 'discord.js';
 import { BotCommand } from './types';
-import { invalidCommand, getSenderInfo, messageHandlerMapping } from './functions';
+import { invalidCommand, checkEconomy, messageHandlerMapping } from './functions';
 
 const { prefix, token } = require('../config.json');
 const client = new Discord.Client();
 
 client.once('ready', () => {
+    console.log('Moons remaining: %s', checkEconomy());
     console.log(`Logged in as ${client.user.tag}.`);
 });
 
