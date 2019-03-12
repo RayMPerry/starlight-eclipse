@@ -260,6 +260,7 @@ export const dailyBonus = (message: Message) => {
 
     balances[message.member.id] = balances[message.member.id] || 0;
     balances[message.member.id] += dailyAmount;
+    remainingMoons -= dailyAmount;
     saveAllBalances();
     message.reply(format(createResponse('dailyBonus'), dailyAmount));
 };
