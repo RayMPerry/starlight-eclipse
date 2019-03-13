@@ -26,6 +26,7 @@ const bank = require('./data/bank.json');
 let remainingMoons = STARTING_ECONOMY;
 let spareChangeCounter = SPARE_CHANGE_LIMIT;
 let spareChangeMessage: Message = null;
+let lastSpareChangeClaim: number = null;
 
 const createEmbed = (embedColor: EmbedColor) => (senderName: string, message: string): RichEmbed => {
     const infoEmbed = new RichEmbed()
@@ -321,12 +322,13 @@ export const claimSpareChange = (message: Message) => {
         spareChangeMessage.edit(response);
         spareChangeCounter = SPARE_CHANGE_LIMIT;
         spareChangeMessage = null;
+        lastSpareChangeClaim = Date.now();
 
         remainingMoons -= SPARE_CHANGE_AMOUNT;
         balances[message.member.id] += SPARE_CHANGE_AMOUNT;
 
         saveAllBalances();
-    } else {
+    } else if (Date.now() - lastSpareChangeClaim < 60000) {
         const response = createFailureEmbed(message.member.user.tag, metaMessages.alreadyClaimedChange);
         message.channel.send(response);
     }
@@ -341,7 +343,7 @@ export const thumbsUp = (message: Message) => {
     message.channel.send(attachment);
 };
 
-// Exported mapping
+// Exported mappings
 
 export const messageHandlerMapping: HandlerMapping = {
     [BotCommand.PING]: pingBack,
@@ -356,3 +358,4 @@ export const messageHandlerMapping: HandlerMapping = {
     [BotCommand.WITHDRAW]: makeWithdrawal,
     [BotCommand.CLAIM]: claimSpareChange
 };
+

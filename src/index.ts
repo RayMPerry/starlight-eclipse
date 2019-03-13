@@ -1,5 +1,6 @@
 import Discord from 'discord.js';
 import { checkEconomy, messageHandlerMapping, throwSpareChange } from './functions';
+import { commandAliases } from './constants';
 
 const { prefix, token } = require('../config.json');
 const client = new Discord.Client();
@@ -16,7 +17,7 @@ client.on('message', message => {
     const args = message.content.slice(prefix.length).split(/ +/) || [''];
     const command = args.shift().toLowerCase();
 
-    let commandsToRun = messageHandlerMapping[command];
+    let commandsToRun = messageHandlerMapping[commandAliases[command] || command];
 
     if (!commandsToRun) return;
 

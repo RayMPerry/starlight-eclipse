@@ -58,11 +58,17 @@ export const tsundereMessages: MessageMapping = {
     brokeTheBank: 'You took **EVERYONE\'s** :waning_crescent_moon: in the bank!',
     depositComplete: 'Successfully deposited %s :waning_crescent_moon:.',
     withdrawalComplete: 'Successfully withdrew %s :waning_crescent_moon:.'
-}
+};
 
 export const helpMessages: MessageMapping = {
     [BotCommand.ROB]: `\`${BotCommand.ROB} <person to rob | 'all'>\``,
     [BotCommand.DONATE]: `\`${BotCommand.DONATE} <amount to give> <person to give>\``,
     [BotCommand.DEPOSIT]: `\`${BotCommand.DEPOSIT} <amount to deposit>\``,
     [BotCommand.WITHDRAW]: `\`${BotCommand.WITHDRAW} <amount to withdraw>\``
-}
+};
+
+export const commandAliases: MessageMapping = {
+    bal: BotCommand.BALANCE,
+    with: BotCommand.WITHDRAW,
+    dep: BotCommand.DEPOSIT
+};
