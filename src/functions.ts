@@ -300,6 +300,16 @@ export const dailyBonus = (message: Message) => {
     message.channel.send(createSuccessEmbed(message.member.user.tag, format(createResponse('dailyBonus'), dailyAmount)));
 };
 
+export async function setSpareChangeMessage(message: Message, response: RichEmbed) {
+    if (spareChangeMessage) return;
+
+    return await message.channel.send(response)
+        .then(message => {
+            if (Array.isArray(message)) return null;
+            spareChangeMessage = message;
+        });
+};
+
 export const throwSpareChange = (message: Message) => {
     const currentChannelName = (message.channel as TextChannel).name;
     if (remainingMoons < SPARE_CHANGE_AMOUNT || !ALLOWED_CHANNELS.includes(currentChannelName) || spareChangeMessage) return;
@@ -309,11 +319,7 @@ export const throwSpareChange = (message: Message) => {
     const response = createInfoEmbed('Free moons!', metaMessages.spareChange)
         .setImage('https://thumbs.gfycat.com/YawningPersonalEasteuropeanshepherd-max-1mb.gif');
 
-    message.channel.send(response)
-        .then(message => {
-            if (Array.isArray(message)) return;
-            spareChangeMessage = message;
-        });
+    setSpareChangeMessage(message, response);
 }
 
 export const claimSpareChange = (message: Message) => {
