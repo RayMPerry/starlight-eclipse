@@ -10,12 +10,21 @@ export enum BotCommand {
     DEPOSIT = 'deposit',
     WITHDRAW = 'withdraw',
     CLAIM = 'claim',
+    SHOP = 'shop'
 }
 
 export enum EmbedColor {
     INFO = 0x1346b5,
     FAILURE = 0xb51346,
     SUCCESS = 0x46b513
+}
+
+export interface ShopItem {
+    id: number,
+    displayName: string,
+    displayIcon: string,
+    description: string,
+    stock: number
 }
 
 export interface MessageMapping {

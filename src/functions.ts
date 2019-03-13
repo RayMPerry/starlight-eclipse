@@ -1,7 +1,7 @@
 import { format } from 'util';
 import { writeFile } from 'fs';
 import { Message, Attachment, RichEmbed, TextChannel } from 'discord.js';
-import { BotCommand, HandlerMapping, EmbedColor } from './types';
+import { BotCommand, HandlerMapping, EmbedColor, ShopItem } from './types';
 import {
     metaMessages,
     normalMessages,
@@ -23,6 +23,9 @@ import {
 const balances = require('./data/balances.json');
 const dailies = require('./data/dailies.json');
 const bank = require('./data/bank.json');
+const shop = require('./data/shop.json').items || [];
+const inventories = require('./data/inventories.json');
+
 let remainingMoons = STARTING_ECONOMY;
 let spareChangeCounter = SPARE_CHANGE_LIMIT;
 let spareChangeMessage: Message = null;
@@ -79,7 +82,9 @@ export const saveJson = (name: string, data: any) => {
 
 export const saveAllBalances = () => saveJson('balances', balances);
 export const saveAllDailies = () => saveJson('dailies', dailies);
+export const saveAllInventories = () => saveJson('inventories', inventories);
 export const saveTheBank = () => saveJson('bank', bank);
+export const saveTheShop = () => saveJson('shop', shop);
 
 export const checkEconomy = (): number => {
     const walletMoons = Object.keys(balances)
@@ -273,6 +278,36 @@ export const makeBankTransaction = (transactionMode: BotCommand.DEPOSIT | BotCom
 export const makeDeposit = makeBankTransaction(BotCommand.DEPOSIT);
 export const makeWithdrawal = makeBankTransaction(BotCommand.WITHDRAW);
 
+export const displayShopItems = (message: Message) => {
+    const response = createInfoEmbed('Starlight Shop', 'Here are the items you can buy: ');
+    shop.slice(0, 20).forEach((shopItem: ShopItem) => {
+        const itemListing = `[${shopItem.id}] ${shopItem.displayIcon} ${shopItem.description} (${shopItem.stock} left)`;
+        response.addField(shopItem.displayName, itemListing);
+    });
+
+    if (!shop.length) response.addField('Thin Air', 'Free!');
+
+    message.channel.send(response);
+};
+
+export const addItemToShop = (message: Message, args: string[]) => {
+    if (args.length < 2) return;
+
+    const shopItem = {
+        id: shop.length + 1,
+        displayName: args[0],
+        description: args[1],
+        displayIcon: args[2] || ':new_moon:',
+        stock: args[3] || 1
+    };
+
+    shop.push(shopItem);
+    saveTheShop();
+
+    const response = createSuccessEmbed(message.member.user.tag, format(metaMessages.addedNewItem, args[0]));
+    message.channel.send(response);
+};
+
 // All following functions must conform to the global economy.
 
 export const dailyBonus = (message: Message) => {
@@ -363,6 +398,7 @@ export const messageHandlerMapping: HandlerMapping = {
     [BotCommand.ROB]: robMoons,
     [BotCommand.DEPOSIT]: makeDeposit,
     [BotCommand.WITHDRAW]: makeWithdrawal,
-    [BotCommand.CLAIM]: claimSpareChange
+    [BotCommand.CLAIM]: claimSpareChange,
+    [BotCommand.SHOP]: displayShopItems
 };
 

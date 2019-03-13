@@ -24,6 +24,8 @@ export const metaMessages: MessageMapping = {
     spareChange: `Type \`>claim\` to get ${SPARE_CHANGE_AMOUNT} free :waning_crescent_moon:.`,
     claimedChange: `You have claimed ${SPARE_CHANGE_AMOUNT} :waning_crescent_moon:.`,
     alreadyClaimedChange: 'Sorry! Already claimed!',
+    shopListing: 'Here are all the items you can buy!',
+    addedNewItem: 'Successfully created new shop item: %s'
 };
 
 export const normalMessages: MessageMapping = {
