@@ -361,7 +361,7 @@ export const throwSpareChange = (message: Message) => {
     spareChangeCounter -= 1;
     if (spareChangeCounter > 0 || spareChangeTimeout != null) return;
 
-    spareChangeAmount = Math.ceil(Math.random() * SPARE_CHANGE_AMOUNT);
+    spareChangeAmount = Math.min(Math.max(Math.ceil(Math.random() * SPARE_CHANGE_AMOUNT), 10), 35);
 
     const setSpareChangeMessage = (message: Message) => {
         const response = createInfoEmbed('Free moons!', format(metaMessages.spareChange, spareChangePassword, spareChangeAmount))
