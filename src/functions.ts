@@ -281,14 +281,11 @@ export const makeWithdrawal = makeBankTransaction(BotCommand.WITHDRAW);
 export const displayShopItems = (message: Message) => {
     const response = createInfoEmbed('Starlight Shop', 'Here are the items you can buy: ');
     shop.slice(0, 20).forEach((shopItem: ShopItem) => {
-        const itemListing = `[**${shopItem.id}**] ${shopItem.description}`;
-        response.addField(shopItem.displayName, itemListing, true);
-        response.addField('Cost', `${shopItem.cost} :waning_crescent_moon:`, true);
-        response.addBlankField();
+        const itemListing = `[**${shopItem.id}**] ${shopItem.description} (${shopItem.cost} :waning_crescent_moon:)`;
+        response.addField(shopItem.displayName, itemListing);
     });
 
-    if (!shop.length) response.addField('Thin Air', `It's all around you!`, true).addField('Cost', 'Free!', true).addBlankField()
-
+    if (!shop.length) response.addField('Thin Air', `It's all around you! (Free!)`);
     message.channel.send(response);
 };
 
