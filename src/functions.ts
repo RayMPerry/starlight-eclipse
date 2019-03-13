@@ -361,6 +361,11 @@ export const throwSpareChange = (message: Message) => {
 }
 
 export const claimSpareChange = (message: Message) => {
+    if (!balances[message.member.id]) {
+        balances[message.member.id] = 0;
+        saveAllBalances();
+    }
+
     if (spareChangeMessage) {
         const response = createSuccessEmbed(message.member.user.tag, metaMessages.claimedChange);
         spareChangeMessage.edit(response);
