@@ -189,6 +189,7 @@ export const robMoons = (message: Message, args: string[]) => {
             const lostMoons = Math.ceil(THEFT_PENALTY * balances[message.member.id]);
             message.channel.send(createFailureEmbed(message.member.user.tag, format(createResponse('theftFailed'), lostMoons)));
             balances[message.member.id] -= lostMoons;
+            remainingMoons += lostMoons;
             saveAllBalances();
             return;
         }
@@ -217,6 +218,7 @@ export const robMoons = (message: Message, args: string[]) => {
             const lostMoons = Math.ceil(THEFT_PENALTY * balances[message.member.id]);
             message.channel.send(createFailureEmbed(message.member.user.tag, format(createResponse('theftFailed'), lostMoons)));
             balances[message.member.id] -= lostMoons;
+            remainingMoons += lostMoons;
             saveAllBalances();
             return;
         }
