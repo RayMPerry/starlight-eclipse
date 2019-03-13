@@ -14,7 +14,7 @@ export const SPARE_CHANGE_AMOUNT = 5;
 
 // Allowed channels for spare change
 export const ALLOWED_CHANNELS = [
-    'general'
+    'space-lounge'
 ];
 
 export const metaMessages: MessageMapping = {
