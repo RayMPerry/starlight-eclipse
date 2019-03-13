@@ -384,7 +384,6 @@ export const claimSpareChange = (message: Message, args: string[]) => {
         const response = createSuccessEmbed(message.member.user.tag, format(metaMessages.claimedChange, spareChangeAmount));
         spareChangeMessage.edit(response);
         spareChangeCounter = SPARE_CHANGE_LIMIT;
-        spareChangeAmount = null;
         spareChangeTimeout = null;
         spareChangeMessage = null;
         createNewClaimPassword(6);
@@ -392,6 +391,7 @@ export const claimSpareChange = (message: Message, args: string[]) => {
 
         remainingMoons -= spareChangeAmount;
         balances[message.member.id] += spareChangeAmount;
+        spareChangeAmount = null;
 
         saveAllBalances();
     } else if (Date.now() - lastSpareChangeClaim < 60000) {
