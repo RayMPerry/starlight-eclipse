@@ -376,8 +376,8 @@ export const throwSpareChange = (message: Message) => {
 }
 
 export const claimSpareChange = (message: Message, args: string[]) => {
-    if (!args.length) return;
-    if (spareChangeMessage && args[0] === spareChangePassword) {
+    if (!args.length || args[0] !== spareChangePassword) return;
+    if (spareChangeMessage) {
         const response = createSuccessEmbed(message.member.user.tag, metaMessages.claimedChange);
         spareChangeMessage.edit(response);
         spareChangeCounter = SPARE_CHANGE_LIMIT;
