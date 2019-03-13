@@ -23,9 +23,9 @@ export enum EmbedColor {
 export interface ShopItem {
     id: number,
     displayName: string,
-    displayIcon: string,
+    displayIcon?: string,
     description: string,
-    stock: number
+    stock?: number
 }
 
 export interface MessageMapping {
