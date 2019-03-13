@@ -117,19 +117,21 @@ export const getCurrentEconomy = (message: Message) => {
     return;
 };
 
-export const getBalance = (message: Message) => {
-    const currentWalletBalance = balances[message.member.id];
-    const currentBankBalance = bank[message.member.id];
-
-    if (currentWalletBalance == null) {
+export const ensureBankAndBalances = (message: Message) => {
+    if (!balances[message.member.id]) {
         balances[message.member.id] = 0;
         saveAllBalances();
     }
 
-    if (currentBankBalance == null) {
+    if (!bank[message.member.id]) {
         bank[message.member.id] = 0;
         saveTheBank();
     }
+};
+
+export const getBalance = (message: Message) => {
+    const currentWalletBalance = balances[message.member.id];
+    const currentBankBalance = bank[message.member.id];
 
     const response = createInfoEmbed(message.member.user.tag, format(createResponse('balance'), currentWalletBalance || 0, currentBankBalance || 0));
     message.channel.send(response);
@@ -361,11 +363,6 @@ export const throwSpareChange = (message: Message) => {
 }
 
 export const claimSpareChange = (message: Message) => {
-    if (!balances[message.member.id]) {
-        balances[message.member.id] = 0;
-        saveAllBalances();
-    }
-
     if (spareChangeMessage) {
         const response = createSuccessEmbed(message.member.user.tag, metaMessages.claimedChange);
         spareChangeMessage.edit(response);
@@ -399,14 +396,14 @@ export const messageHandlerMapping: HandlerMapping = {
     [BotCommand.PING]: pingBack,
     [BotCommand.GET_TIME]: getCurrentTime,
     [BotCommand.THUMBS_UP]: thumbsUp,
-    [BotCommand.BALANCE]: getBalance,
-    [BotCommand.DONATE]: donateMoons,
+    [BotCommand.BALANCE]: [ensureBankAndBalances, getBalance],
+    [BotCommand.DONATE]: [ensureBankAndBalances, donateMoons],
     [BotCommand.ECONOMY]: getCurrentEconomy,
-    [BotCommand.DAILY]: dailyBonus,
-    [BotCommand.ROB]: robMoons,
-    [BotCommand.DEPOSIT]: makeDeposit,
-    [BotCommand.WITHDRAW]: makeWithdrawal,
-    [BotCommand.CLAIM]: claimSpareChange,
+    [BotCommand.DAILY]: [ensureBankAndBalances, dailyBonus],
+    [BotCommand.ROB]: [ensureBankAndBalances, robMoons],
+    [BotCommand.DEPOSIT]: [ensureBankAndBalances, makeDeposit],
+    [BotCommand.WITHDRAW]: [ensureBankAndBalances, makeWithdrawal],
+    [BotCommand.CLAIM]: [ensureBankAndBalances, claimSpareChange],
     [BotCommand.SHOP]: displayShopItems,
     [BotCommand.ADD_SHOP_ITEM]: addItemToShop
 };
