@@ -1,11 +1,13 @@
 import Discord from 'discord.js';
-import { checkEconomy, messageHandlerMapping, throwSpareChange } from './functions';
+import { checkEconomy, messageHandlerMapping, throwSpareChange, createNewClaimPassword } from './functions';
 import { commandAliases } from './constants';
 
 const { prefix, token } = require('../config.json');
 const client = new Discord.Client();
 
 client.once('ready', () => {
+    createNewClaimPassword(6);
+
     console.log('Moons remaining: %s', checkEconomy());
     console.log(`Logged in as ${client.user.tag}.`);
 });

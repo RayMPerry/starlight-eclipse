@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto';
 import { format } from 'util';
 import { writeFile } from 'fs';
 import { Message, Attachment, RichEmbed, TextChannel } from 'discord.js';
@@ -30,6 +31,7 @@ let remainingMoons = STARTING_ECONOMY;
 let spareChangeCounter = SPARE_CHANGE_LIMIT;
 let spareChangeMessage: Message = null;
 let spareChangeTimeout: NodeJS.Timeout = null;
+let spareChangePassword: string = null;
 let lastSpareChangeClaim: number = null;
 
 const createEmbed = (embedColor: EmbedColor) => (senderName: string, message: string): RichEmbed => {
@@ -341,6 +343,17 @@ export const dailyBonus = (message: Message) => {
     message.channel.send(createSuccessEmbed(message.member.user.tag, format(createResponse('dailyBonus'), dailyAmount)));
 };
 
+export const createNewClaimPassword = (length: number): string => {
+    const newPassword = randomBytes((Math.ceil(length * 3) / 4))
+        .toString('base64')
+        .slice(0, length)
+        .replace(/\+|\//g, '0');
+
+    spareChangePassword = newPassword;
+
+    return newPassword;
+};
+
 export const throwSpareChange = (message: Message) => {
     const currentChannelName = (message.channel as TextChannel).name;
     if (remainingMoons < SPARE_CHANGE_AMOUNT || !ALLOWED_CHANNELS.includes(currentChannelName) || spareChangeMessage) return;
@@ -348,7 +361,7 @@ export const throwSpareChange = (message: Message) => {
     if (spareChangeCounter > 0 || spareChangeTimeout != null) return;
 
     const setSpareChangeMessage = (message: Message) => {
-        const response = createInfoEmbed('Free moons!', metaMessages.spareChange)
+        const response = createInfoEmbed('Free moons!', format(metaMessages.spareChange, spareChangePassword))
             .setImage('https://thumbs.gfycat.com/YawningPersonalEasteuropeanshepherd-max-1mb.gif');
 
         message.channel.send(response)
@@ -362,13 +375,15 @@ export const throwSpareChange = (message: Message) => {
     spareChangeTimeout = setTimeout(setSpareChangeMessage.bind(null, message), 5000);
 }
 
-export const claimSpareChange = (message: Message) => {
-    if (spareChangeMessage) {
+export const claimSpareChange = (message: Message, args: string[]) => {
+    if (!args.length) return;
+    if (spareChangeMessage && args[0] === spareChangePassword) {
         const response = createSuccessEmbed(message.member.user.tag, metaMessages.claimedChange);
         spareChangeMessage.edit(response);
         spareChangeCounter = SPARE_CHANGE_LIMIT;
         spareChangeTimeout = null;
         spareChangeMessage = null;
+        createNewClaimPassword(6);
         lastSpareChangeClaim = Date.now();
 
         remainingMoons -= SPARE_CHANGE_AMOUNT;
