@@ -23,7 +23,7 @@ import {
 const balances = require('./data/balances.json');
 const dailies = require('./data/dailies.json');
 const bank = require('./data/bank.json');
-const shop = require('./data/shop.json').items || [];
+const shop = require('./data/shop.json');
 const inventories = require('./data/inventories.json');
 
 let remainingMoons = STARTING_ECONOMY;
@@ -281,11 +281,12 @@ export const makeWithdrawal = makeBankTransaction(BotCommand.WITHDRAW);
 export const displayShopItems = (message: Message) => {
     const response = createInfoEmbed('Starlight Shop', 'Here are the items you can buy: ');
     shop.slice(0, 20).forEach((shopItem: ShopItem) => {
-        const itemListing = `[${shopItem.id}] ${shopItem.displayIcon} ${shopItem.description}`;
+        const itemListing = `[**${shopItem.id}**] ${shopItem.description}`;
         response.addField(shopItem.displayName, itemListing);
+        response.addField('Cost', `${shopItem.cost} :waning_crescent_moon:`, true);
     });
 
-    if (!shop.length) response.addField('Thin Air', 'Free!');
+    if (!shop.length) response.addField('Thin Air', `It's all around you!`).addField('Cost', 'Free!', true);
 
     message.channel.send(response);
 };
@@ -297,8 +298,8 @@ export const addItemToShop = (message: Message, args: string[]) => {
         id: shop.length + 1,
         displayName: args[0],
         description: args.slice(1).join(' '),
-        displayIcon: ':new_moon:',
-        stock: 1
+        stock: 1,
+        cost: 100
     };
 
     // Modify displayIcon and stock here.
