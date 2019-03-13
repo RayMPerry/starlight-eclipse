@@ -26,7 +26,7 @@ const bank = require('./data/bank.json');
 let remainingMoons = STARTING_ECONOMY;
 let spareChangeCounter = SPARE_CHANGE_LIMIT;
 let spareChangeMessage: Message = null;
-let spareChangeTimeout: number = null;
+let spareChangeTimeout: NodeJS.Timeout = null;
 let lastSpareChangeClaim: number = null;
 
 const createEmbed = (embedColor: EmbedColor) => (senderName: string, message: string): RichEmbed => {
@@ -307,17 +307,19 @@ export const throwSpareChange = (message: Message) => {
     spareChangeCounter -= 1;
     if (spareChangeCounter > 0 || spareChangeTimeout != null) return;
 
-    const response = createInfoEmbed('Free moons!', metaMessages.spareChange)
+    const setSpareChangeMessage = (message: Message) => {
+        const response = createInfoEmbed('Free moons!', metaMessages.spareChange)
         .setImage('https://thumbs.gfycat.com/YawningPersonalEasteuropeanshepherd-max-1mb.gif');
-
-    clearTimeout(spareChangeTimeout);
-    spareChangeTimeout = setTimeout((message: Message) => {
+        
         message.channel.send(response)
             .then(message => {
                 if (Array.isArray(message)) return;
                 spareChangeMessage = message;
             });
-    }, 5000);
+    };
+    
+    clearTimeout(spareChangeTimeout);
+    spareChangeTimeout = setTimeout(setSpareChangeMessage.bind(null, message), 5000);
 }
 
 export const claimSpareChange = (message: Message) => {
