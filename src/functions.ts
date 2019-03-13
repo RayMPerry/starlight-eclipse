@@ -282,11 +282,12 @@ export const displayShopItems = (message: Message) => {
     const response = createInfoEmbed('Starlight Shop', 'Here are the items you can buy: ');
     shop.slice(0, 20).forEach((shopItem: ShopItem) => {
         const itemListing = `[**${shopItem.id}**] ${shopItem.description}`;
-        response.addField(shopItem.displayName, itemListing);
+        response.addField(shopItem.displayName, itemListing, true);
         response.addField('Cost', `${shopItem.cost} :waning_crescent_moon:`, true);
+        response.addBlankField();
     });
 
-    if (!shop.length) response.addField('Thin Air', `It's all around you!`).addField('Cost', 'Free!', true);
+    if (!shop.length) response.addField('Thin Air', `It's all around you!`, true).addField('Cost', 'Free!', true).addBlankField()
 
     message.channel.send(response);
 };
