@@ -309,15 +309,15 @@ export const throwSpareChange = (message: Message) => {
 
     const setSpareChangeMessage = (message: Message) => {
         const response = createInfoEmbed('Free moons!', metaMessages.spareChange)
-        .setImage('https://thumbs.gfycat.com/YawningPersonalEasteuropeanshepherd-max-1mb.gif');
-        
+            .setImage('https://thumbs.gfycat.com/YawningPersonalEasteuropeanshepherd-max-1mb.gif');
+
         message.channel.send(response)
             .then(message => {
                 if (Array.isArray(message)) return;
                 spareChangeMessage = message;
             });
     };
-    
+
     clearTimeout(spareChangeTimeout);
     spareChangeTimeout = setTimeout(setSpareChangeMessage.bind(null, message), 5000);
 }
@@ -327,6 +327,7 @@ export const claimSpareChange = (message: Message) => {
         const response = createSuccessEmbed(message.member.user.tag, metaMessages.claimedChange);
         spareChangeMessage.edit(response);
         spareChangeCounter = SPARE_CHANGE_LIMIT;
+        spareChangeTimeout = null;
         spareChangeMessage = null;
         lastSpareChangeClaim = Date.now();
 
