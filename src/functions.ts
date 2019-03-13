@@ -281,7 +281,7 @@ export const makeWithdrawal = makeBankTransaction(BotCommand.WITHDRAW);
 export const displayShopItems = (message: Message) => {
     const response = createInfoEmbed('Starlight Shop', 'Here are the items you can buy: ');
     shop.slice(0, 20).forEach((shopItem: ShopItem) => {
-        const itemListing = `[${shopItem.id}] ${shopItem.displayIcon} ${shopItem.description} (${shopItem.stock} left)`;
+        const itemListing = `[${shopItem.id}] ${shopItem.displayIcon} ${shopItem.description}`;
         response.addField(shopItem.displayName, itemListing);
     });
 
@@ -296,17 +296,21 @@ export const addItemToShop = (message: Message, args: string[]) => {
     const shopItem: ShopItem = {
         id: shop.length + 1,
         displayName: args[0],
-        description: args.slice(1, args.length - 1).join(' ')
+        description: args.slice(1).join(' '),
+        displayIcon: ':new_moon:',
+        stock: 1
     };
 
-    const displayIcon = args[args.length - 2];
-    const stock = Number(args[args.length - 1]);
+    // const displayIcon = args[args.length - 2];
+    // const stock = Number(args[args.length - 1]);
 
-    shopItem.displayIcon = /^\:.+\:$/m.test(displayIcon)
-        ? args[args.length - 2]
-        : ':new_moon:';
+    // shopItem.displayIcon = /^\:.+\:$/m.test(displayIcon)
+    //     ? displayIcon
+    //     : ':new_moon:';
 
-    shopItem.stock = stock === stock ? stock : 1;
+    // shopItem.stock = stock === stock
+    //     ? stock
+    //     : 1;
 
     shop.push(shopItem);
     saveTheShop();
