@@ -19,9 +19,9 @@ client.on('message', message => {
 
     let commandsToRun = messageHandlerMapping[commandAliases[command] || command];
 
-    if (!commandsToRun) return;
-
     commandsToRun = Array.isArray(commandsToRun) ? commandsToRun : [commandsToRun];
+    if (!commandsToRun || !commandsToRun.every(commandToRun => typeof commandToRun === 'function')) return;
+
     commandsToRun.forEach(command => command(message, args));
 });
 
