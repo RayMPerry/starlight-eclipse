@@ -10,7 +10,7 @@ export const GOTTEM_CHANCE = 0.45;
 export const CLEAN_HOUSE_CHANCE = 0.1;
 export const THEFT_PENALTY = 0.15;
 export const SPARE_CHANGE_LIMIT = 50;
-export const SPARE_CHANGE_AMOUNT = 5;
+export const SPARE_CHANGE_AMOUNT = 35;
 
 // Allowed channels for spare change
 export const ALLOWED_CHANNELS = [
@@ -21,8 +21,8 @@ export const metaMessages: MessageMapping = {
     invalidCommand: 'Sorry, I don\'t understand that.',
     notEnoughMoons: 'There are no more moons to claim.',
     souredEconomy: '**THE ECONOMY HAS SOURED.**',
-    spareChange: `Type \`>claim %s\` to get ${SPARE_CHANGE_AMOUNT} free :waning_crescent_moon:.`,
-    claimedChange: `You have claimed ${SPARE_CHANGE_AMOUNT} :waning_crescent_moon:.`,
+    spareChange: `Type \`>claim %s\` to get %s free :waning_crescent_moon:.`,
+    claimedChange: `You have claimed %s :waning_crescent_moon:.`,
     alreadyClaimedChange: 'Sorry! Already claimed!',
     shopListing: 'Here are all the items you can buy!',
     addedNewItem: 'Successfully created new shop item: %s'

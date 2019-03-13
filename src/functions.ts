@@ -29,6 +29,7 @@ const inventories = require('./data/inventories.json');
 
 let remainingMoons = STARTING_ECONOMY;
 let spareChangeCounter = SPARE_CHANGE_LIMIT;
+let spareChangeAmount: number = null;
 let spareChangeMessage: Message = null;
 let spareChangeTimeout: NodeJS.Timeout = null;
 let spareChangePassword: string = null;
@@ -360,8 +361,10 @@ export const throwSpareChange = (message: Message) => {
     spareChangeCounter -= 1;
     if (spareChangeCounter > 0 || spareChangeTimeout != null) return;
 
+    spareChangeAmount = Math.ceil(Math.random() * SPARE_CHANGE_AMOUNT);
+
     const setSpareChangeMessage = (message: Message) => {
-        const response = createInfoEmbed('Free moons!', format(metaMessages.spareChange, spareChangePassword))
+        const response = createInfoEmbed('Free moons!', format(metaMessages.spareChange, spareChangePassword, spareChangeAmount))
             .setImage('https://thumbs.gfycat.com/YawningPersonalEasteuropeanshepherd-max-1mb.gif');
 
         message.channel.send(response)
@@ -378,16 +381,17 @@ export const throwSpareChange = (message: Message) => {
 export const claimSpareChange = (message: Message, args: string[]) => {
     if (!args.length || args[0] !== spareChangePassword) return;
     if (spareChangeMessage) {
-        const response = createSuccessEmbed(message.member.user.tag, metaMessages.claimedChange);
+        const response = createSuccessEmbed(message.member.user.tag, format(metaMessages.claimedChange, spareChangeAmount));
         spareChangeMessage.edit(response);
         spareChangeCounter = SPARE_CHANGE_LIMIT;
+        spareChangeAmount = null;
         spareChangeTimeout = null;
         spareChangeMessage = null;
         createNewClaimPassword(6);
         lastSpareChangeClaim = Date.now();
 
-        remainingMoons -= SPARE_CHANGE_AMOUNT;
-        balances[message.member.id] += SPARE_CHANGE_AMOUNT;
+        remainingMoons -= spareChangeAmount;
+        balances[message.member.id] += spareChangeAmount;
 
         saveAllBalances();
     } else if (Date.now() - lastSpareChangeClaim < 60000) {
