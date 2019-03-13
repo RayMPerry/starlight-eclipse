@@ -8,7 +8,14 @@ export enum BotCommand {
     DAILY = 'daily',
     ROB = 'rob',
     DEPOSIT = 'deposit',
-    WITHDRAW = 'withdraw'
+    WITHDRAW = 'withdraw',
+    CLAIM = 'claim',
+}
+
+export enum EmbedColor {
+    INFO = 0x1346b5,
+    FAILURE = 0xb51346,
+    SUCCESS = 0x46b513
 }
 
 export interface MessageMapping {

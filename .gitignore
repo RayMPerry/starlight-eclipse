@@ -61,6 +61,8 @@ typings/
 .next
 
 # Other
+*.pem
+
 dist/**/*.js
 dist/data/balances.json
 dist/data/bank.json

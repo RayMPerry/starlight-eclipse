@@ -1,26 +1,44 @@
 import { format } from 'util';
 import { writeFile } from 'fs';
-import { Message, Attachment } from 'discord.js';
-import { BotCommand, HandlerMapping } from './types';
+import { Message, Attachment, RichEmbed, TextChannel } from 'discord.js';
+import { BotCommand, HandlerMapping, EmbedColor } from './types';
 import {
-    STARTING_ECONOMY,
     metaMessages,
     normalMessages,
     tsundereMessages,
     helpMessages,
+    STARTING_ECONOMY,
     DAILY_MOON_AMOUNT,
     DAY_IN_MILLIS,
     TSUNDERE_CHANCE,
     THEFT_CHANCE,
     GOTTEM_CHANCE,
     CLEAN_HOUSE_CHANCE,
-    THEFT_PENALTY
+    THEFT_PENALTY,
+    SPARE_CHANGE_LIMIT,
+    SPARE_CHANGE_AMOUNT,
+    ALLOWED_CHANNELS
 } from './constants';
 
 const balances = require('./data/balances.json');
 const dailies = require('./data/dailies.json');
 const bank = require('./data/bank.json');
 let remainingMoons = STARTING_ECONOMY;
+let spareChangeCounter = SPARE_CHANGE_LIMIT;
+let spareChangeMessage: Message = null;
+
+const createEmbed = (embedColor: EmbedColor) => (senderName: string, message: string): RichEmbed => {
+    const infoEmbed = new RichEmbed()
+        .setTitle(senderName)
+        .setColor(embedColor)
+        .setDescription(message);
+
+    return infoEmbed;
+}
+
+const createInfoEmbed = createEmbed(EmbedColor.INFO);
+const createFailureEmbed = createEmbed(EmbedColor.FAILURE);
+const createSuccessEmbed = createEmbed(EmbedColor.SUCCESS);
 
 // Utility functions
 
@@ -28,11 +46,13 @@ export const isTsundere = () => Math.random() <= TSUNDERE_CHANCE;
 export const createResponse = (key: string): string => isTsundere() ? tsundereMessages[key] : normalMessages[key];
 
 export const invalidCommand = (message: any) => {
-    message.reply(metaMessages.invalidCommand);
+    const response = createFailureEmbed(message.member.user.tag, metaMessages.invalidCommand);
+    message.channel.send(response);
 };
 
 export const pingBack = (message: Message) => {
-    message.reply(createResponse('hello'));
+    const response = createInfoEmbed(message.member.user.tag, createResponse('hello'));
+    message.channel.send(response);
 };
 
 export const getSenderInfo = (message: Message) => {
@@ -42,7 +62,8 @@ export const getSenderInfo = (message: Message) => {
 
 export const getCurrentTime = (message: Message) => {
     const currentDate = new Date();
-    message.channel.send(format('It is %s where I am.', currentDate.toLocaleString('en-US')));
+    const response = createInfoEmbed(message.member.user.tag, format('It is %s where I am.', currentDate.toLocaleString('en-US')));
+    message.channel.send(response);
 };
 
 // Currency functions
@@ -77,10 +98,14 @@ export const checkEconomy = (): number => {
 };
 
 export const getCurrentEconomy = (message: Message) => {
+    let response = null;
+
     if (remainingMoons < 0) {
-        message.channel.send(metaMessages.souredEconomy);
+        response = createFailureEmbed(message.member.user.tag, metaMessages.souredEconomy);
+        message.channel.send(response);
     } else {
-        message.channel.send(format('There are %s unclaimed :waning_crescent_moon:s left.', remainingMoons));
+        response = createInfoEmbed(message.member.user.tag, format('There are %s unclaimed :waning_crescent_moon:s left.', remainingMoons));
+        message.channel.send(response);
     }
     return;
 };
@@ -99,7 +124,8 @@ export const getBalance = (message: Message) => {
         saveTheBank();
     }
 
-    message.reply(format(createResponse('balance'), currentWalletBalance || 0, currentBankBalance || 0));
+    const response = createInfoEmbed(message.member.user.tag, format(createResponse('balance'), currentWalletBalance || 0, currentBankBalance || 0));
+    message.channel.send(response);
 };
 
 export const donateMoons = (message: Message, args: any[]) => {
@@ -109,7 +135,8 @@ export const donateMoons = (message: Message, args: any[]) => {
 
     // Dumb errors
     if (donationAmount !== donationAmount || !otherPerson) {
-        message.channel.send(helpMessages[BotCommand.DONATE]);
+        const response = createInfoEmbed(message.member.user.tag, helpMessages[BotCommand.DONATE]);
+        message.channel.send(response);
         return;
     }
 
@@ -117,7 +144,8 @@ export const donateMoons = (message: Message, args: any[]) => {
 
     // Valid errors
     if (currentBalance <= 0 || currentBalance < donationAmount) {
-        message.reply(createResponse('insufficientFunds'));
+        const response = createFailureEmbed(message.member.user.tag, createResponse('insufficientFunds'));
+        message.channel.send(response);
         return;
     }
 
@@ -125,7 +153,8 @@ export const donateMoons = (message: Message, args: any[]) => {
     balances[otherPersonId] = balances[otherPersonId] || 0;
     balances[otherPersonId] += donationAmount;
 
-    message.channel.send(format(createResponse('transferredFunds'), `<@${otherPersonId}>`, donationAmount));
+    const response = createSuccessEmbed(message.member.user.tag, format(createResponse('transferredFunds'), `<@${otherPersonId}>`, donationAmount));
+    message.channel.send(response);
     saveAllBalances();
     return;
 };
@@ -135,22 +164,24 @@ export const robMoons = (message: Message, args: string[]) => {
     let otherPersonId = null;
 
     if (balances[message.member.id] < DAILY_MOON_AMOUNT) {
-        message.reply(createResponse('insufficientFunds'));
+        const response = createFailureEmbed(message.member.user.tag, createResponse('insufficientFunds'));
+        message.channel.send(response);
         return;
     }
 
     if (!theftTarget) {
-        message.channel.send(helpMessages[BotCommand.ROB]);
+        const response = createInfoEmbed(message.member.user.tag, helpMessages[BotCommand.ROB]);
+        message.channel.send(response);
         return;
     }
 
     if (theftTarget === 'all') {
         // Rob everyone.
-        message.reply(createResponse('attemptTheft'));
+        // message.reply(createResponse('attemptTheft'));
         if (Math.random() >= THEFT_CHANCE || Math.random() >= CLEAN_HOUSE_CHANCE) {
             const lostMoons = Math.ceil(THEFT_PENALTY * balances[message.member.id]);
-            message.reply(format(createResponse('theftFailed'), lostMoons));
-            balances[message.member.id] -= lostMoons
+            message.channel.send(createFailureEmbed(message.member.user.tag, format(createResponse('theftFailed'), lostMoons)));
+            balances[message.member.id] -= lostMoons;
             saveAllBalances();
             return;
         }
@@ -164,22 +195,21 @@ export const robMoons = (message: Message, args: string[]) => {
         saveAllBalances()
         saveTheBank();
 
-        message.reply(createResponse('brokeTheBank'));
+        message.channel.send(createSuccessEmbed(message.member.user.tag, createResponse('brokeTheBank')));
 
         return;
 
     } else {
         otherPersonId = theftTarget.match(/\d+/).shift();
         if (message.member.id === otherPersonId || balances[otherPersonId] == null || balances[otherPersonId] <= 0) {
-            message.reply(createResponse('invalidTarget'));
+            message.channel.send(createInfoEmbed(message.member.user.tag, createResponse('invalidTarget')));
             return;
         }
 
-        message.reply(createResponse('attemptTheft'));
         if (Math.random() >= THEFT_CHANCE) {
             const lostMoons = Math.ceil(THEFT_PENALTY * balances[message.member.id]);
-            message.reply(format(createResponse('theftFailed'), lostMoons));
-            balances[message.member.id] -= lostMoons
+            message.channel.send(createFailureEmbed(message.member.user.tag, format(createResponse('theftFailed'), lostMoons)));
+            balances[message.member.id] -= lostMoons;
             saveAllBalances();
             return;
         }
@@ -188,10 +218,10 @@ export const robMoons = (message: Message, args: string[]) => {
 
         if (Math.random() <= GOTTEM_CHANCE) {
             stolenAmount = balances[otherPersonId];
-            message.reply(format(createResponse('stoleTheWallet'), `<@${otherPersonId}>`));
+            message.channel.send(createSuccessEmbed(message.member.user.tag, format(createResponse('stoleTheWallet'), `<@${otherPersonId}>`)));
         } else {
             stolenAmount = Math.ceil(Math.random() * 0.5 * balances[otherPersonId]);
-            message.reply(format(createResponse('theftSucceeded'), stolenAmount, `<@${otherPersonId}>`));
+            message.channel.send(createSuccessEmbed(message.member.user.tag, format(createResponse('theftSucceeded'), stolenAmount, `<@${otherPersonId}>`)));
         }
 
         balances[otherPersonId] -= stolenAmount;
@@ -208,7 +238,8 @@ export const makeBankTransaction = (transactionMode: BotCommand.DEPOSIT | BotCom
         : Number(args[0]);
 
     if (transactionAmount !== transactionAmount) {
-        message.channel.send(helpMessages[transactionMode]);
+        const response = createInfoEmbed(message.member.user.tag, helpMessages[transactionMode]);
+        message.channel.send(response);
         return;
     }
 
@@ -217,7 +248,8 @@ export const makeBankTransaction = (transactionMode: BotCommand.DEPOSIT | BotCom
         : bank;
 
     if (transactionAmount > fundingSource[message.member.id]) {
-        message.reply(createResponse('insufficientFunds'));
+        const response = createFailureEmbed(message.member.user.tag, createResponse('insufficientFunds'));
+        message.channel.send(response);
         return;
     }
 
@@ -231,7 +263,8 @@ export const makeBankTransaction = (transactionMode: BotCommand.DEPOSIT | BotCom
     saveAllBalances();
     saveTheBank();
 
-    message.reply(format(createResponse(transactionMode === BotCommand.DEPOSIT ? 'depositComplete' : 'withdrawalComplete'), transactionAmount));
+    const response = createSuccessEmbed(message.member.user.tag, format(createResponse(transactionMode === BotCommand.DEPOSIT ? 'depositComplete' : 'withdrawalComplete'), transactionAmount));
+    message.channel.send(response);
     return;
 };
 
@@ -242,12 +275,13 @@ export const makeWithdrawal = makeBankTransaction(BotCommand.WITHDRAW);
 
 export const dailyBonus = (message: Message) => {
     if (remainingMoons <= 0) {
-        message.channel.send(metaMessages.notEnoughMoons);
+        message.channel.send(createInfoEmbed(message.member.user.tag, metaMessages.notEnoughMoons));
         return;
     }
 
     if (Date.now() - dailies[message.member.id] < DAY_IN_MILLIS) {
-        message.reply(createResponse('tooEarlyForDaily'));
+        const response = createFailureEmbed(message.member.user.tag, createResponse('tooEarlyForDaily'));
+        message.channel.send(response);
         return;
     }
 
@@ -262,8 +296,43 @@ export const dailyBonus = (message: Message) => {
     balances[message.member.id] += dailyAmount;
     remainingMoons -= dailyAmount;
     saveAllBalances();
-    message.reply(format(createResponse('dailyBonus'), dailyAmount));
+    message.channel.send(createSuccessEmbed(message.member.user.tag, format(createResponse('dailyBonus'), dailyAmount)));
 };
+
+export const throwSpareChange = (message: Message) => {
+    const currentChannelName = (message.channel as TextChannel).name;
+    if (remainingMoons < SPARE_CHANGE_AMOUNT || !ALLOWED_CHANNELS.includes(currentChannelName) || spareChangeMessage) return;
+    spareChangeCounter -= 1;
+    if (spareChangeCounter > 0) return;
+
+    const response = createInfoEmbed('Free moons!', metaMessages.spareChange)
+        .setImage('https://thumbs.gfycat.com/YawningPersonalEasteuropeanshepherd-max-1mb.gif');
+
+    message.channel.send(response)
+        .then(message => {
+            if (Array.isArray(message)) return;
+            spareChangeMessage = message;
+        });
+}
+
+export const claimSpareChange = (message: Message) => {
+    if (spareChangeMessage) {
+        const response = createSuccessEmbed(message.member.user.tag, metaMessages.claimedChange);
+        spareChangeMessage.edit(response);
+        spareChangeCounter = SPARE_CHANGE_LIMIT;
+        spareChangeMessage = null;
+
+        remainingMoons -= SPARE_CHANGE_AMOUNT;
+        balances[message.member.id] += SPARE_CHANGE_AMOUNT;
+
+        saveAllBalances();
+    } else {
+        const response = createFailureEmbed(message.member.user.tag, metaMessages.alreadyClaimedChange);
+        message.channel.send(response);
+    }
+
+    return;
+}
 
 // Silly functions
 
@@ -284,5 +353,6 @@ export const messageHandlerMapping: HandlerMapping = {
     [BotCommand.DAILY]: dailyBonus,
     [BotCommand.ROB]: robMoons,
     [BotCommand.DEPOSIT]: makeDeposit,
-    [BotCommand.WITHDRAW]: makeWithdrawal
+    [BotCommand.WITHDRAW]: makeWithdrawal,
+    [BotCommand.CLAIM]: claimSpareChange
 };

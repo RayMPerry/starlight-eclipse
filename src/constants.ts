@@ -9,11 +9,21 @@ export const THEFT_CHANCE = 0.6;
 export const GOTTEM_CHANCE = 0.45;
 export const CLEAN_HOUSE_CHANCE = 0.1;
 export const THEFT_PENALTY = 0.15;
+export const SPARE_CHANGE_LIMIT = 250;
+export const SPARE_CHANGE_AMOUNT = 5;
+
+// Allowed channels for spare change
+export const ALLOWED_CHANNELS = [
+    'general'
+];
 
 export const metaMessages: MessageMapping = {
     invalidCommand: 'Sorry, I don\'t understand that.',
     notEnoughMoons: 'There are no more moons to claim.',
-    souredEconomy: '**THE ECONOMY HAS SOURED.**'
+    souredEconomy: '**THE ECONOMY HAS SOURED.**',
+    spareChange: `Type \`>claim\` to get ${SPARE_CHANGE_AMOUNT} free :waning_crescent_moon:.`,
+    claimedChange: `You have claimed ${SPARE_CHANGE_AMOUNT} :waning_crescent_moon:.`,
+    alreadyClaimedChange: 'Sorry! Already claimed!',
 };
 
 export const normalMessages: MessageMapping = {

@@ -1,6 +1,5 @@
 import Discord from 'discord.js';
-import { BotCommand } from './types';
-import { invalidCommand, checkEconomy, messageHandlerMapping } from './functions';
+import { checkEconomy, messageHandlerMapping, throwSpareChange } from './functions';
 
 const { prefix, token } = require('../config.json');
 const client = new Discord.Client();
@@ -11,6 +10,7 @@ client.once('ready', () => {
 });
 
 client.on('message', message => {
+    throwSpareChange(message);
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).split(/ +/) || [''];
