@@ -281,7 +281,7 @@ export const makeWithdrawal = makeBankTransaction(BotCommand.WITHDRAW);
 export const displayShopItems = (message: Message) => {
     const response = createInfoEmbed('Starlight Shop', 'Here are the items you can buy: ');
     shop.slice(0, 20).forEach((shopItem: ShopItem) => {
-        const itemListing = `[**${shopItem.id}**] ${shopItem.description} (${shopItem.cost} :waning_crescent_moon:)`;
+        const itemListing = `[**${shopItem.id}**] ${shopItem.description} *(${shopItem.cost} :waning_crescent_moon:)*`;
         response.addField(shopItem.displayName, itemListing);
     });
 
