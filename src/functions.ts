@@ -234,8 +234,12 @@ export const robMoons = (message: Message, args: string[]) => {
 };
 
 export const makeBankTransaction = (transactionMode: BotCommand.DEPOSIT | BotCommand.WITHDRAW) => (message: Message, args: string[]) => {
+    const fundingSource = transactionMode === BotCommand.DEPOSIT
+        ? balances
+        : bank;
+
     const transactionAmount = args[0] === 'all'
-        ? balances[message.member.id]
+        ? fundingSource[message.member.id]
         : Number(args[0]);
 
     if (transactionAmount !== transactionAmount) {
@@ -243,10 +247,6 @@ export const makeBankTransaction = (transactionMode: BotCommand.DEPOSIT | BotCom
         message.channel.send(response);
         return;
     }
-
-    const fundingSource = transactionMode === BotCommand.DEPOSIT
-        ? balances
-        : bank;
 
     if (transactionAmount > fundingSource[message.member.id]) {
         const response = createFailureEmbed(message.member.user.tag, createResponse('insufficientFunds'));
