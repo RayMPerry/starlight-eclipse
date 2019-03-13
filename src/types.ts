@@ -10,7 +10,8 @@ export enum BotCommand {
     DEPOSIT = 'deposit',
     WITHDRAW = 'withdraw',
     CLAIM = 'claim',
-    SHOP = 'shop'
+    SHOP = 'shop',
+    ADD_SHOP_ITEM = 'additem',
 }
 
 export enum EmbedColor {

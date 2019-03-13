@@ -399,6 +399,7 @@ export const messageHandlerMapping: HandlerMapping = {
     [BotCommand.DEPOSIT]: makeDeposit,
     [BotCommand.WITHDRAW]: makeWithdrawal,
     [BotCommand.CLAIM]: claimSpareChange,
-    [BotCommand.SHOP]: displayShopItems
+    [BotCommand.SHOP]: displayShopItems,
+    [BotCommand.ADD_SHOP_ITEM]: addItemToShop
 };
 

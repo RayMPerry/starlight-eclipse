@@ -72,5 +72,6 @@ export const helpMessages: MessageMapping = {
 export const commandAliases: MessageMapping = {
     bal: BotCommand.BALANCE,
     with: BotCommand.WITHDRAW,
-    dep: BotCommand.DEPOSIT
+    dep: BotCommand.DEPOSIT,
+    add: BotCommand.ADD_SHOP_ITEM
 };
