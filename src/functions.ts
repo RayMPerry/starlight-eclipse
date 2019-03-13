@@ -301,16 +301,7 @@ export const addItemToShop = (message: Message, args: string[]) => {
         stock: 1
     };
 
-    // const displayIcon = args[args.length - 2];
-    // const stock = Number(args[args.length - 1]);
-
-    // shopItem.displayIcon = /^\:.+\:$/m.test(displayIcon)
-    //     ? displayIcon
-    //     : ':new_moon:';
-
-    // shopItem.stock = stock === stock
-    //     ? stock
-    //     : 1;
+    // Modify displayIcon and stock here.
 
     shop.push(shopItem);
     saveTheShop();
