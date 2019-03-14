@@ -364,7 +364,9 @@ export const throwSpareChange = (message: Message) => {
     spareChangeAmount = Math.min(Math.max(Math.ceil(Math.random() * SPARE_CHANGE_AMOUNT), 10), 35);
 
     const setSpareChangeMessage = (message: Message) => {
-        const response = createInfoEmbed('Free moons!', format(metaMessages.spareChange, spareChangePassword, spareChangeAmount))
+        const poisonedPassword = spareChangePassword.split('').join('​');
+
+        const response = createInfoEmbed('Free moons!', format(metaMessages.spareChange, poisonedPassword, spareChangeAmount))
             .setImage('https://thumbs.gfycat.com/YawningPersonalEasteuropeanshepherd-max-1mb.gif');
 
         message.channel.send(response)
