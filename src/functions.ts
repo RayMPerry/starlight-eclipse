@@ -329,7 +329,7 @@ export const buyItemFromShop = (message: Message, args: string[]) => {
     const shopSelection = Number(args[0]);
     if (shopSelection !== shopSelection) return;
 
-    const shopItem = shop[shopSelection];
+    const shopItem = shop[shopSelection + 1];
     if (!shopItem) return;
 
     if (balances[message.member.id] < shopItem.cost) {
