@@ -261,7 +261,7 @@ export const makeBankTransaction = (transactionMode: BotCommand.DEPOSIT | BotCom
         return;
     }
 
-    if (transactionAmount > fundingSource[message.member.id]) {
+    if (transactionAmount > fundingSource[message.member.id] || !transactionAmount) {
         const response = createFailureEmbed(message.member.user.tag, createResponse('insufficientFunds'));
         message.channel.send(response);
         return;
