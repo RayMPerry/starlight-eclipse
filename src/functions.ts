@@ -180,7 +180,8 @@ export const donateMoons = (message: Message, args: any[]) => {
 
 export const robMoons = (message: Message, args: string[]) => {
     const theftTarget = args[0] || '';
-    let otherPersonId = null;
+    const otherPerson = theftTarget.match(/\d+/) || [];
+    const otherPersonId = otherPerson.shift();
 
     if (balances[message.member.id] < DAILY_MOON_AMOUNT) {
         const response = createFailureEmbed(message.member.user.tag, createResponse('insufficientFunds'));
@@ -220,7 +221,6 @@ export const robMoons = (message: Message, args: string[]) => {
         return;
 
     } else {
-        otherPersonId = theftTarget.match(/\d+/).shift();
         if (message.member.id === otherPersonId || balances[otherPersonId] == null || balances[otherPersonId] <= 0) {
             message.channel.send(createInfoEmbed(message.member.user.tag, createResponse('invalidTarget')));
             return;
