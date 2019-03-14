@@ -132,6 +132,13 @@ export const ensureBankAndBalances = (message: Message) => {
     }
 };
 
+export const ensureInventories = (message: Message) => {
+    if (!inventories[message.member.id]) {
+        inventories[message.member.id] = [];
+        saveAllInventories();
+    };
+};
+
 export const getBalance = (message: Message) => {
     const currentWalletBalance = balances[message.member.id];
     const currentBankBalance = bank[message.member.id];
@@ -316,6 +323,28 @@ export const addItemToShop = (message: Message, args: string[]) => {
     message.channel.send(response);
 };
 
+export const buyItemFromShop = (message: Message, args: string[]) => {
+    if (args.length !== 1) return;
+
+    const shopSelection = Number(args[0]);
+    if (shopSelection !== shopSelection) return;
+
+    const shopItem = shop[shopSelection];
+    if (!shopItem) return;
+
+    if (balances[message.member.id] < shopItem.cost) {
+        const response = createFailureEmbed(message.member.user.tag, createResponse('insufficientFunds'));
+        message.channel.send(response);
+        return;
+    }
+
+    remainingMoons += shopItem.cost;
+    balances[message.member.id] -= shopItem.cost;
+    saveAllBalances();
+
+    message.channel.send(createSuccessEmbed(message.member.user.tag, format(metaMessages.boughtNewItem, shopItem.displayName)));
+};
+
 // All following functions must conform to the global economy.
 
 export const dailyBonus = (message: Message) => {
@@ -426,6 +455,7 @@ export const messageHandlerMapping: HandlerMapping = {
     [BotCommand.WITHDRAW]: [ensureBankAndBalances, makeWithdrawal],
     [BotCommand.CLAIM]: [ensureBankAndBalances, claimSpareChange],
     [BotCommand.SHOP]: displayShopItems,
-    [BotCommand.ADD_SHOP_ITEM]: addItemToShop
+    [BotCommand.ADD_SHOP_ITEM]: addItemToShop,
+    [BotCommand.BUY_SHOP_ITEM]: [ensureInventories, buyItemFromShop]
 };
 

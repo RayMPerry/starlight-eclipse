@@ -25,7 +25,8 @@ export const metaMessages: MessageMapping = {
     claimedChange: `You have claimed %s :waning_crescent_moon:.`,
     alreadyClaimedChange: 'Sorry! Already claimed!',
     shopListing: 'Here are all the items you can buy!',
-    addedNewItem: 'Successfully created new shop item: %s'
+    addedNewItem: 'Successfully created new shop item: %s',
+    boughtNewItem: 'You bought %s!'
 };
 
 export const normalMessages: MessageMapping = {
@@ -73,5 +74,6 @@ export const commandAliases: MessageMapping = {
     bal: BotCommand.BALANCE,
     with: BotCommand.WITHDRAW,
     dep: BotCommand.DEPOSIT,
-    add: BotCommand.ADD_SHOP_ITEM
+    add: BotCommand.ADD_SHOP_ITEM,
+    buy: BotCommand.BUY_SHOP_ITEM
 };
