@@ -386,6 +386,14 @@ export const createNewClaimPassword = (length: number): string => {
     return newPassword;
 };
 
+export const resetSpareChange = () => {
+    spareChangeCounter = SPARE_CHANGE_LIMIT;
+    spareChangeTimeout = null;
+    spareChangeMessage = null;
+    createNewClaimPassword(6);
+    lastSpareChangeClaim = Date.now();
+};
+
 export const throwSpareChange = (message: Message) => {
     const currentChannelName = (message.channel as TextChannel).name;
     if (remainingMoons < SPARE_CHANGE_AMOUNT || !ALLOWED_CHANNELS.includes(currentChannelName) || spareChangeMessage) return;
@@ -401,8 +409,9 @@ export const throwSpareChange = (message: Message) => {
             .setImage('https://thumbs.gfycat.com/YawningPersonalEasteuropeanshepherd-max-1mb.gif');
 
         spareChangeExpiration = setTimeout(() => {
-            const expiredMoonsResponse = createFailureEmbed('Oh no!', metaMessages.expiredMoons);
+            const expiredMoonsResponse = createFailureEmbed('Oh no!', metaMessages.expiredChange);
             spareChangeMessage.edit(expiredMoonsResponse);
+            resetSpareChange();
         }, 30000);
 
         message.channel.send(response)
@@ -422,11 +431,7 @@ export const claimSpareChange = (message: Message, args: string[]) => {
         clearTimeout(spareChangeExpiration);
         const response = createSuccessEmbed(message.member.user.tag, format(metaMessages.claimedChange, spareChangeAmount));
         spareChangeMessage.edit(response);
-        spareChangeCounter = SPARE_CHANGE_LIMIT;
-        spareChangeTimeout = null;
-        spareChangeMessage = null;
-        createNewClaimPassword(6);
-        lastSpareChangeClaim = Date.now();
+        resetSpareChange();
 
         remainingMoons -= spareChangeAmount;
         balances[message.member.id] += spareChangeAmount;
