@@ -4,7 +4,7 @@ import { commandAliases } from './constants';
 
 const { prefix, token } = require('../config.json');
 const client = new Discord.Client();
-1
+
 client.once('ready', () => {
     createNewClaimPassword(6);
 
