@@ -4,7 +4,7 @@ import { commandAliases } from './constants';
 
 const { prefix, token } = require('../config.json');
 const client = new Discord.Client();
-
+1
 client.once('ready', () => {
     createNewClaimPassword(6);
 
@@ -22,9 +22,12 @@ client.on('message', message => {
     let commandsToRun = messageHandlerMapping[commandAliases[command] || command];
 
     commandsToRun = Array.isArray(commandsToRun) ? commandsToRun : [commandsToRun];
-    if (!commandsToRun || !commandsToRun.every(commandToRun => typeof commandToRun === 'function')) return;
+    if (!commandsToRun.every(commandToRun => typeof commandToRun === 'function')) return;
 
-    commandsToRun.forEach(command => command(message, args));
+    commandsToRun.forEach(command => {
+        if (!command) return;
+        command(message, args);
+    });
 });
 
 client.login(token);
