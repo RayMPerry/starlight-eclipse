@@ -20,6 +20,7 @@ import {
     SPARE_CHANGE_AMOUNT,
     ALLOWED_CHANNELS
 } from './constants';
+import { createInflate } from 'zlib';
 
 const balances = require('./data/balances.json');
 const dailies = require('./data/dailies.json');
@@ -32,6 +33,7 @@ let spareChangeCounter = SPARE_CHANGE_LIMIT;
 let spareChangeAmount: number = null;
 let spareChangeMessage: Message = null;
 let spareChangeTimeout: NodeJS.Timeout = null;
+let spareChangeExpiration: NodeJS.Timeout = null;
 let spareChangePassword: string = null;
 let lastSpareChangeClaim: number = null;
 
@@ -384,6 +386,14 @@ export const createNewClaimPassword = (length: number): string => {
     return newPassword;
 };
 
+export const resetSpareChange = () => {
+    spareChangeCounter = SPARE_CHANGE_LIMIT;
+    spareChangeTimeout = null;
+    spareChangeMessage = null;
+    createNewClaimPassword(6);
+    lastSpareChangeClaim = Date.now();
+};
+
 export const throwSpareChange = (message: Message) => {
     const currentChannelName = (message.channel as TextChannel).name;
     if (remainingMoons < SPARE_CHANGE_AMOUNT || !ALLOWED_CHANNELS.includes(currentChannelName) || spareChangeMessage) return;
@@ -397,6 +407,12 @@ export const throwSpareChange = (message: Message) => {
 
         const response = createInfoEmbed('Free moons!', format(metaMessages.spareChange, poisonedPassword, spareChangeAmount))
             .setImage('https://thumbs.gfycat.com/YawningPersonalEasteuropeanshepherd-max-1mb.gif');
+
+        spareChangeExpiration = setTimeout(() => {
+            const expiredMoonsResponse = createFailureEmbed('Oh no!', metaMessages.expiredChange);
+            spareChangeMessage.edit(expiredMoonsResponse);
+            resetSpareChange();
+        }, 30000);
 
         message.channel.send(response)
             .then(message => {
@@ -412,13 +428,10 @@ export const throwSpareChange = (message: Message) => {
 export const claimSpareChange = (message: Message, args: string[]) => {
     if (!args.length || args[0] !== spareChangePassword) return;
     if (spareChangeMessage) {
+        clearTimeout(spareChangeExpiration);
         const response = createSuccessEmbed(message.member.user.tag, format(metaMessages.claimedChange, spareChangeAmount));
         spareChangeMessage.edit(response);
-        spareChangeCounter = SPARE_CHANGE_LIMIT;
-        spareChangeTimeout = null;
-        spareChangeMessage = null;
-        createNewClaimPassword(6);
-        lastSpareChangeClaim = Date.now();
+        resetSpareChange();
 
         remainingMoons -= spareChangeAmount;
         balances[message.member.id] += spareChangeAmount;
