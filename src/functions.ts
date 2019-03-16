@@ -455,7 +455,9 @@ export const thumbsUp = (message: Message) => {
 
 export const speakAs = (client: Client, message: Message, args: string[]) => {
     // if (!args.length) return;
-    console.log(client.guilds);
+
+    // 540289328975446019
+    console.log(client.channels);
 }
 
 // Exported mappings
