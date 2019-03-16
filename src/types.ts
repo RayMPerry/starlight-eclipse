@@ -12,7 +12,8 @@ export enum BotCommand {
     CLAIM = 'claim',
     SHOP = 'shop',
     ADD_SHOP_ITEM = 'additem',
-    BUY_SHOP_ITEM = 'buyitem'
+    BUY_SHOP_ITEM = 'buyitem',
+    SPEAK_AS = 'speakAs'
 }
 
 export enum EmbedColor {
