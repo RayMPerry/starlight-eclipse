@@ -474,7 +474,6 @@ export const messageHandlerMapping: HandlerMapping = {
     [BotCommand.CLAIM]: [ensureBankAndBalances, claimSpareChange],
     [BotCommand.SHOP]: displayShopItems,
     [BotCommand.ADD_SHOP_ITEM]: addItemToShop,
-    [BotCommand.BUY_SHOP_ITEM]: [ensureInventories, buyItemFromShop],
-    [BotCommand.SPEAK_AS]: speakAs
+    [BotCommand.BUY_SHOP_ITEM]: [ensureInventories, buyItemFromShop]
 };
 

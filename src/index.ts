@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
-import { checkEconomy, messageHandlerMapping, throwSpareChange, createNewClaimPassword } from './functions';
+import { checkEconomy, messageHandlerMapping, throwSpareChange, createNewClaimPassword, speakAs } from './functions';
 import { commandAliases } from './constants';
+import { BotCommand } from './types';
 
 const { prefix, token } = require('../config.json');
 const client = new Discord.Client();
@@ -18,6 +19,8 @@ client.on('message', message => {
 
     const args = message.content.slice(prefix.length).split(/ +/) || [''];
     const command = args.shift().toLowerCase();
+
+    if (command === BotCommand.SPEAK_AS) return speakAs(client, message, args);
 
     let commandsToRun = messageHandlerMapping[commandAliases[command] || command];
 
