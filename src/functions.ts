@@ -454,10 +454,11 @@ export const thumbsUp = (message: Message) => {
 };
 
 export const speakAs = (client: Client, message: Message, args: string[]) => {
-    // if (!args.length) return;
+    if (!args.length) return;
+    const channel = client.channels.get('540300634432208921');
+    if (!channel) return;
 
-    // 540289328975446019
-    console.log(client.channels);
+    (channel as TextChannel).send(args.join(' '));
 }
 
 // Exported mappings
