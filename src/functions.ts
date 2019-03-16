@@ -1,7 +1,7 @@
 import { randomBytes } from 'crypto';
 import { format } from 'util';
 import { writeFile } from 'fs';
-import { Message, Attachment, RichEmbed, TextChannel } from 'discord.js';
+import { Message, Attachment, RichEmbed, TextChannel, Client } from 'discord.js';
 import { BotCommand, HandlerMapping, EmbedColor, ShopItem } from './types';
 import {
     metaMessages,
@@ -439,6 +439,11 @@ export const thumbsUp = (message: Message) => {
     const attachment = new Attachment(__dirname + '/assets/thumbs_up.gif');
     message.channel.send(attachment);
 };
+
+export const speakAs = (client: Client, message: Message, args: string[]) => {
+    // if (!args.length) return;
+    console.log(client.guilds);
+}
 
 // Exported mappings
 
