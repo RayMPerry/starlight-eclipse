@@ -348,7 +348,7 @@ export const buyItemFromShop = (message: Message, args: string[]) => {
         return;
     }
 
-    if (!message.member.roles.get(shopItem.roleId)) {
+    if (message.member.roles.get(shopItem.roleId)) {
         const response = createFailureEmbed(message.member.user.tag, metaMessages.alreadyHaveItem);
         message.channel.send(response);
         return;
