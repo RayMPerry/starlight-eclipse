@@ -27,6 +27,7 @@ export const metaMessages: MessageMapping = {
     expiredChange: 'No-one claimed these moons!',
     shopListing: 'Here are all the items you can buy!',
     addedNewItem: 'Successfully created new shop item: %s',
+    alreadyHaveItem: 'Sorry! You already have this role!',
     boughtNewItem: 'You bought %s!'
 };
 

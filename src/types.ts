@@ -28,7 +28,9 @@ export interface ShopItem {
     displayIcon?: string,
     description: string,
     stock?: number,
-    cost: number
+    cost: number,
+    color?: string,
+    roleId?: string
 }
 
 export interface MessageMapping {

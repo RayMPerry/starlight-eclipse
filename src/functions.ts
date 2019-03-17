@@ -313,10 +313,18 @@ export const addItemToShop = (message: Message, args: string[]) => {
         displayName: args[0],
         description: args.slice(1).join(' '),
         stock: 1,
-        cost: 100
+        cost: 1000,
+        color: '#dcdcdc'
     };
 
-    // Modify displayIcon and stock here.
+    message.member.guild.createRole({
+        name: shopItem.displayName,
+        color: shopItem.color
+    }).then(role => {
+        shopItem.roleId = role.id;
+    }).catch(error => {
+        console.error('[addItemToShop]', error);
+    });
 
     shop.push(shopItem);
     saveTheShop();
@@ -340,11 +348,24 @@ export const buyItemFromShop = (message: Message, args: string[]) => {
         return;
     }
 
-    remainingMoons += shopItem.cost;
-    balances[message.member.id] -= shopItem.cost;
-    saveAllBalances();
+    if (!message.member.roles.get(shopItem.roleId)) {
+        const response = createFailureEmbed(message.member.user.tag, metaMessages.alreadyHaveItem);
+        message.channel.send(response);
+        return;
+    }
 
-    message.channel.send(createSuccessEmbed(message.member.user.tag, format(metaMessages.boughtNewItem, shopItem.displayName)));
+    message.member.addRole(shopItem.roleId)
+        .then(_ => {
+            remainingMoons += shopItem.cost;
+            balances[message.member.id] -= shopItem.cost;
+            saveAllBalances();
+
+            message.channel.send(createSuccessEmbed(message.member.user.tag, format(metaMessages.boughtNewItem, shopItem.displayName)));
+        })
+        .catch(error => {
+            console.error('[buyItemFromShop]', error);
+        });
+
 };
 
 // All following functions must conform to the global economy.
