@@ -349,14 +349,14 @@ export const buyItemFromShop = (message: Message, args: string[]) => {
         return;
     }
 
-    if (message.member.roles.get(shopItem.roleId)) {
+    const roleToAdd = message.member.guild.roles.find('name', shopItem.displayName);
+    if (!roleToAdd) return;
+
+    if (message.member.roles.get(roleToAdd.id)) {
         const response = createFailureEmbed(message.member.user.tag, metaMessages.alreadyHaveItem);
         message.channel.send(response);
         return;
     }
-
-    const roleToAdd = message.member.guild.roles.find('name', shopItem.displayName);
-    if (!roleToAdd) return;
 
     message.member.addRole(roleToAdd)
         .then(_ => {
