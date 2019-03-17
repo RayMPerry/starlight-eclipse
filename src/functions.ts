@@ -322,15 +322,16 @@ export const addItemToShop = (message: Message, args: string[]) => {
         color: shopItem.color
     }).then(role => {
         shopItem.roleId = role.id;
+
+        shop.push(shopItem);
+        saveTheShop();
+
+        const response = createSuccessEmbed(message.member.user.tag, format(metaMessages.addedNewItem, args[0]));
+        message.channel.send(response);
     }).catch(error => {
         console.error('[addItemToShop]', error);
     });
 
-    shop.push(shopItem);
-    saveTheShop();
-
-    const response = createSuccessEmbed(message.member.user.tag, format(metaMessages.addedNewItem, args[0]));
-    message.channel.send(response);
 };
 
 export const buyItemFromShop = (message: Message, args: string[]) => {
