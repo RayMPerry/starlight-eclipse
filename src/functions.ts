@@ -356,7 +356,7 @@ export const buyItemFromShop = (message: Message, args: string[]) => {
 
     if (!shopItem.roleId) return;
 
-    message.member.addRole(message.member.guild.roles.get(shopItem.roleId))
+    message.member.addRole(shopItem.roleId)
         .then(_ => {
             remainingMoons += shopItem.cost;
             balances[message.member.id] -= shopItem.cost;
