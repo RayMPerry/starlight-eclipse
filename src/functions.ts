@@ -431,7 +431,7 @@ export const throwSpareChange = (message: Message) => {
         const poisonedPassword = spareChangePassword.split('').join('​');
 
         const response = createInfoEmbed('Free moons!', format(metaMessages.spareChange, poisonedPassword, spareChangeAmount))
-            .setImage('https://thumbs.gfycat.com/YawningPersonalEasteuropeanshepherd-max-1mb.gif');
+            .setImage('https://cdn.discordapp.com/attachments/554429743219343397/556998004930772992/ezgif-2-513c134382a5.gif');
 
         spareChangeExpiration = setTimeout(() => {
             const expiredMoonsResponse = createFailureEmbed('Oh no!', metaMessages.expiredChange);
