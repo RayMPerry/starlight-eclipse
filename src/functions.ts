@@ -34,7 +34,7 @@ let spareChangeAmount: number = null;
 let spareChangeMessage: Message = null;
 let spareChangeTimeout: NodeJS.Timeout = null;
 let spareChangeExpiration: NodeJS.Timeout = null;
-let spareChangePassword: string = null;
+let spareChangePassword = '';
 let lastSpareChangeClaim: number = null;
 
 const createEmbed = (embedColor: EmbedColor) => (senderName: string, message: string): RichEmbed => {
@@ -415,7 +415,7 @@ export const resetSpareChange = () => {
     spareChangeCounter = SPARE_CHANGE_LIMIT;
     spareChangeTimeout = null;
     spareChangeMessage = null;
-    createNewClaimPassword(6);
+    // createNewClaimPassword(6);
     lastSpareChangeClaim = Date.now();
 };
 
@@ -428,7 +428,7 @@ export const throwSpareChange = (message: Message) => {
     spareChangeAmount = Math.max(Math.ceil(Math.random() * SPARE_CHANGE_AMOUNT), 10);
 
     const setSpareChangeMessage = (message: Message) => {
-        const poisonedPassword = spareChangePassword.split('').join('​');
+        const poisonedPassword = '​'; //spareChangePassword.split('').join('​');
 
         const response = createInfoEmbed('Free moons!', format(metaMessages.spareChange, poisonedPassword, spareChangeAmount))
             .setImage('https://cdn.discordapp.com/attachments/554429743219343397/556998004930772992/ezgif-2-513c134382a5.gif');
@@ -451,7 +451,7 @@ export const throwSpareChange = (message: Message) => {
 }
 
 export const claimSpareChange = (message: Message, args: string[]) => {
-    if (!args.length || args[0] !== spareChangePassword) return;
+    // if (!args.length || args[0] !== spareChangePassword) return;
     if (spareChangeMessage) {
         clearTimeout(spareChangeExpiration);
         const response = createSuccessEmbed(message.member.user.tag, format(metaMessages.claimedChange, spareChangeAmount));
