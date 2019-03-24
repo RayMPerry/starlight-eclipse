@@ -21,7 +21,7 @@ export const metaMessages: MessageMapping = {
     invalidCommand: 'Sorry, I don\'t understand that.',
     notEnoughMoons: 'There are no more moons to claim.',
     souredEconomy: '**THE ECONOMY HAS SOURED.**',
-    spareChange: `Type \`>claim %s\` to get %s free :waning_crescent_moon:.`,
+    spareChange: `Type \`>c​l​a​i​m %s\` to get %s free :waning_crescent_moon:.`,
     claimedChange: `You have claimed %s :waning_crescent_moon:.`,
     alreadyClaimedChange: 'Sorry! Already claimed!',
     expiredChange: 'No-one claimed these moons!',
