@@ -9,7 +9,7 @@ export const THEFT_CHANCE = 0.6;
 export const GOTTEM_CHANCE = 0.45;
 export const CLEAN_HOUSE_CHANCE = 0.1;
 export const THEFT_PENALTY = 0.15;
-export const SPARE_CHANGE_LIMIT = 50;
+export const SPARE_CHANGE_LIMIT = 100;
 export const SPARE_CHANGE_AMOUNT = 35;
 
 // Allowed channels for spare change
