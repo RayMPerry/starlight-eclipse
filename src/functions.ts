@@ -116,7 +116,7 @@ export const getCurrentEconomy = (message: Message) => {
         response = createFailureEmbed(message.member.user.tag, metaMessages.souredEconomy);
         message.channel.send(response);
     } else {
-        response = createInfoEmbed(message.member.user.tag, format('There are %s unclaimed :waning_crescent_moon:s left.', remainingMoons));
+        response = createInfoEmbed(message.member.user.tag, format(metaMessages.remainingMoons, remainingMoons));
         message.channel.send(response);
     }
     return;
@@ -297,7 +297,7 @@ export const makeWithdrawal = makeBankTransaction(BotCommand.WITHDRAW);
 export const displayShopItems = (message: Message) => {
     const response = createInfoEmbed('Starlight Shop', 'Here are the items you can buy: ');
     shop.slice(0, 20).forEach((shopItem: ShopItem) => {
-        const itemListing = `[**${shopItem.id}**] ${shopItem.description} *(${shopItem.cost} :waning_crescent_moon:)*`;
+        const itemListing = `[**${shopItem.id}**] ${shopItem.description} *(${shopItem.cost} :rose:)*`;
         response.addField(shopItem.displayName, itemListing);
     });
 
@@ -430,8 +430,8 @@ export const throwSpareChange = (message: Message) => {
     const setSpareChangeMessage = (message: Message) => {
         const poisonedPassword = '​'; //spareChangePassword.split('').join('​');
 
-        const response = createInfoEmbed('Free moons!', format(metaMessages.spareChange, poisonedPassword, spareChangeAmount))
-            .setImage('https://cdn.discordapp.com/attachments/554429743219343397/556998004930772992/ezgif-2-513c134382a5.gif');
+        const response = createInfoEmbed('Free :rose:!', format(metaMessages.spareChange, poisonedPassword, spareChangeAmount))
+            .setImage('https://cdn.discordapp.com/attachments/554429743219343397/561915147514413077/tumblr_ozbx86pCdW1w5n1g1o1_400.gif');
 
         spareChangeExpiration = setTimeout(() => {
             const expiredMoonsResponse = createFailureEmbed('Oh no!', metaMessages.expiredChange);

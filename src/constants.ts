@@ -14,17 +14,18 @@ export const SPARE_CHANGE_AMOUNT = 35;
 
 // Allowed channels for spare change
 export const ALLOWED_CHANNELS = [
-    'space-lounge'
+    'main-lounge'
 ];
 
 export const metaMessages: MessageMapping = {
     invalidCommand: 'Sorry, I don\'t understand that.',
-    notEnoughMoons: 'There are no more moons to claim.',
+    remainingMoons: 'There are %s unclaimed :rose: left.',
+    notEnoughMoons: 'There are no more :rose: to claim.',
     souredEconomy: '**THE ECONOMY HAS SOURED.**',
-    spareChange: `Type \`>c​l​a​i​m %s\` to get %s free :waning_crescent_moon:.`,
-    claimedChange: `You have claimed %s :waning_crescent_moon:.`,
+    spareChange: `Type \`>c​l​a​i​m %s\` to get %s free :rose:.`,
+    claimedChange: `You have claimed %s :rose:.`,
     alreadyClaimedChange: 'Sorry! Already claimed!',
-    expiredChange: 'No-one claimed these moons!',
+    expiredChange: 'No-one claimed these :rose:!',
     shopListing: 'Here are all the items you can buy!',
     addedNewItem: 'Successfully created new shop item: %s',
     alreadyHaveItem: 'Sorry! You already have this role!',
@@ -33,36 +34,36 @@ export const metaMessages: MessageMapping = {
 
 export const normalMessages: MessageMapping = {
     hello: 'Hello!',
-    balance: 'You have %s :waning_crescent_moon: and %s in the bank.',
-    insufficientFunds: 'Oops! You do not have enough :waning_crescent_moon:.',
-    transferredFunds: 'Successfully given %s %s :waning_crescent_moon:!',
+    balance: 'You have %s :rose: and %s in the bank.',
+    insufficientFunds: 'Oops! You do not have enough :rose:.',
+    transferredFunds: 'Successfully given %s %s :rose:!',
     tooEarlyForDaily: 'You\'ve already claimed your daily bonus!',
-    dailyBonus: 'Here\'s your %s :waning_crescent_moon:!',
+    dailyBonus: 'Here\'s your %s :rose:!',
     invalidTarget: 'Hmm. I don\'t see any easy marks.',
     attemptTheft: 'May Lady Luck smile upon you.',
-    theftFailed: 'You got caught and got %s :waning_crescent_moon: confiscated.',
-    theftSucceeded: 'A clean getaway! You stole %s :waning_crescent_moon: from %s!',
-    stoleTheWallet: 'You took all of %s\'s :waning_crescent_moon:!',
-    brokeTheBank: 'You took **EVERYONE\'s** :waning_crescent_moon: in the bank!',
-    depositComplete: 'Successfully deposited %s :waning_crescent_moon:.',
-    withdrawalComplete: 'Successfully withdrew %s :waning_crescent_moon:.'
+    theftFailed: 'You got caught and got %s :rose: confiscated.',
+    theftSucceeded: 'A clean getaway! You stole %s :rose: from %s!',
+    stoleTheWallet: 'You took all of %s\'s :rose:!',
+    brokeTheBank: 'You took **EVERYONE\'s** :rose: in the bank!',
+    depositComplete: 'Successfully deposited %s :rose:.',
+    withdrawalComplete: 'Successfully withdrew %s :rose:.'
 };
 
 export const tsundereMessages: MessageMapping = {
     hello: '...Hello, I guess.',
-    balance: 'Tch. You probably have %s :waning_crescent_moon: and %s in the bank.',
-    insufficientFunds: 'You don\'t even have enough :waning_crescent_moon:. Geez.',
-    transferredFunds: '...Whatever. %s got their %s :waning_crescent_moon:.',
+    balance: 'Tch. You probably have %s :rose: and %s in the bank.',
+    insufficientFunds: 'You don\'t even have enough :rose:. Geez.',
+    transferredFunds: '...Whatever. %s got their %s :rose:.',
     tooEarlyForDaily: '... \*scoffs\*',
-    dailyBonus: 'Here. %s :waning_crescent_moon:. Now, go away.',
+    dailyBonus: 'Here. %s :rose:. Now, go away.',
     invalidTarget: 'Hmm. I don\'t see any easy marks...',
     attemptTheft: 'May Lady Luck smile upon you.',
-    theftFailed: 'You got caught, you dummy! You lost %s :waning_crescent_moon:.',
-    theftSucceeded: 'A clean getaway! You stole %s :waning_crescent_moon: from %s!',
-    stoleTheWallet: 'You took all of %s\'s :waning_crescent_moon:!',
-    brokeTheBank: 'You took **EVERYONE\'s** :waning_crescent_moon: in the bank!',
-    depositComplete: 'Successfully deposited %s :waning_crescent_moon:.',
-    withdrawalComplete: 'Successfully withdrew %s :waning_crescent_moon:.'
+    theftFailed: 'You got caught, you dummy! You lost %s :rose:.',
+    theftSucceeded: 'A clean getaway! You stole %s :rose: from %s!',
+    stoleTheWallet: 'You took all of %s\'s :rose:!',
+    brokeTheBank: 'You took **EVERYONE\'s** :rose: in the bank!',
+    depositComplete: 'Successfully deposited %s :rose:.',
+    withdrawalComplete: 'Successfully withdrew %s :rose:.'
 };
 
 export const helpMessages: MessageMapping = {
