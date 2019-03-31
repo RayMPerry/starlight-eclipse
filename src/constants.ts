@@ -2,7 +2,7 @@ import { BotCommand, MessageMapping } from './types';
 
 export const DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
 
-export const TSUNDERE_CHANCE = 0.3;
+export const TSUNDERE_CHANCE = 0;
 export const STARTING_ECONOMY = 1000000;
 export const DAILY_MOON_AMOUNT = 100;
 export const THEFT_CHANCE = 0.6;
