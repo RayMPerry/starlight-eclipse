@@ -4,7 +4,7 @@ export enum BotCommand {
     BALANCE = 'balance',
     GET_TIME = 'time',
     DONATE = 'give',
-    ECONOMY = 'moons',
+    ECONOMY = 'roses',
     DAILY = 'daily',
     ROB = 'rob',
     DEPOSIT = 'deposit',
