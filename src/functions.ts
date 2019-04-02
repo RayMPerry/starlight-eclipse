@@ -54,19 +54,25 @@ const createSuccessEmbed = createEmbed(EmbedColor.SUCCESS);
 // Utility functions
 const saveCursedMembers = () => saveJson('cursedMembers', cursedMembers);
 
-const createCurse = (mode: BotCommand.CURSE | BotCommand.UNCURSE) => (message: Message) => {
+const createCurse = (mode: BotCommand.CURSE | BotCommand.UNCURSE) => (message: Message, args: string[]) => {
+    const curseTarget = args[0] || '';
+    const otherPerson = curseTarget.match(/\d+/) || [];
+    const otherPersonId = otherPerson.shift() || '';
+
+    if (!otherPersonId) return;
+
     const shouldExit = mode === BotCommand.CURSE
-        ? cursedMembers.includes(message.member.id)
-        : !cursedMembers.includes(message.member.id);
+        ? cursedMembers.includes(otherPersonId)
+        : !cursedMembers.includes(otherPersonId);
 
     if (shouldExit) return;
     if (mode === BotCommand.CURSE) {
-        cursedMembers.push(message.member.id);
+        cursedMembers.push(otherPersonId);
         message.reply('May the forces that be have mercy on their soul.');
     }
 
     if (mode === BotCommand.UNCURSE) {
-        cursedMembers.splice(cursedMembers.findIndex((memberId: string) => memberId === message.member.id), 1);
+        cursedMembers.splice(cursedMembers.findIndex((memberId: string) => memberId === otherPersonId), 1);
         message.reply('Forgive them, for they know not what they do.');
     }
 
