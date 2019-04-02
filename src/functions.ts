@@ -27,6 +27,7 @@ const dailies = require('./data/dailies.json');
 const bank = require('./data/bank.json');
 const shop = require('./data/shop.json');
 const inventories = require('./data/inventories.json');
+const cursedMembers = require('./data/cursedMembers.json');
 
 let remainingMoons = STARTING_ECONOMY;
 let spareChangeCounter = SPARE_CHANGE_LIMIT;
@@ -51,6 +52,35 @@ const createFailureEmbed = createEmbed(EmbedColor.FAILURE);
 const createSuccessEmbed = createEmbed(EmbedColor.SUCCESS);
 
 // Utility functions
+const saveCursedMembers = () => saveJson('cursedMembers', cursedMembers);
+
+const createCurse = (mode: BotCommand.CURSE | BotCommand.UNCURSE) => (message: Message) => {
+    const shouldExit = mode === BotCommand.CURSE
+        ? cursedMembers.includes(message.member.id)
+        : !cursedMembers.includes(message.member.id);
+
+    if (shouldExit) return;
+    if (mode === BotCommand.CURSE) {
+        cursedMembers.push(message.member.id);
+        message.reply('May the forces that be have mercy on their soul.');
+    }
+
+    if (mode === BotCommand.UNCURSE) {
+        cursedMembers.splice(cursedMembers.findIndex((memberId: string) => memberId === message.member.id), 1);
+        message.reply('Forgive them, for they know not what they do.');
+    }
+
+    saveCursedMembers();
+    return;
+}
+
+export const deleteCursedMessage = (message: Message) => {
+    if (cursedMembers.indexOf(message.member.id) < 0) return;
+    message.delete();
+};
+
+export const curseMember = createCurse(BotCommand.CURSE);
+export const uncurseMember = createCurse(BotCommand.UNCURSE);
 
 export const isTsundere = () => Math.random() <= TSUNDERE_CHANCE;
 export const createResponse = (key: string): string => isTsundere() ? tsundereMessages[key] : normalMessages[key];

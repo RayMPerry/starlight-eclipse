@@ -1,5 +1,5 @@
 import Discord from 'discord.js';
-import { checkEconomy, messageHandlerMapping, throwSpareChange, createNewClaimPassword, speakAs } from './functions';
+import { checkEconomy, messageHandlerMapping, throwSpareChange, createNewClaimPassword, speakAs, deleteCursedMessage } from './functions';
 import { commandAliases } from './constants';
 import { BotCommand } from './types';
 
@@ -14,6 +14,7 @@ client.once('ready', () => {
 });
 
 client.on('message', message => {
+    deleteCursedMessage(message);
     throwSpareChange(message);
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 

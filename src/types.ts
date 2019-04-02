@@ -13,7 +13,9 @@ export enum BotCommand {
     SHOP = 'shop',
     ADD_SHOP_ITEM = 'additem',
     BUY_SHOP_ITEM = 'buyitem',
-    SPEAK_AS = 'speak'
+    SPEAK_AS = 'speak',
+    CURSE = 'curse',
+    UNCURSE = 'uncurse'
 }
 
 export enum EmbedColor {
